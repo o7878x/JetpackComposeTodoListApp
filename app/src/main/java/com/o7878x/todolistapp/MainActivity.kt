@@ -4,14 +4,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.o7878x.todolistapp.model.TodoItem
+import com.o7878x.todolistapp.ui.theme.OverlappingHeight
 import com.o7878x.todolistapp.ui.theme.TodoListAppTheme
+import com.o7878x.todolistapp.widget.TodoInputBar
+import com.o7878x.todolistapp.widget.TodoItemsContainer
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,10 +26,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TodoListAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    AppContent()
                 }
             }
         }
@@ -31,17 +34,35 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
+fun AppContent() {
+    val todoItemsFlow = MutableStateFlow(
+        listOf(
+            TodoItem(title = "Todo Item 1"),
+            TodoItem(title = "Todo Item 2", isDone = true),
+            TodoItem(title = "Todo Item 3"),
+            TodoItem(title = "Todo Item 4", isDone = true),
+        )
     )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TodoListAppTheme {
-        Greeting("Android")
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        TodoItemsContainer(
+            todoItemsFlow = todoItemsFlow,
+            onItemClick = {},
+            onItemDelete = { item ->
+                if (item.isDone) {
+                    return@TodoItemsContainer
+                }
+                todoItemsFlow.value = todoItemsFlow.value.filter {
+                    it != item
+                }
+            },
+            overlappingElementsHeight = OverlappingHeight
+        )
+        TodoInputBar(
+            modifier = Modifier.align(Alignment.BottomStart),
+            onAddButtonClick = {}
+        )
     }
 }
