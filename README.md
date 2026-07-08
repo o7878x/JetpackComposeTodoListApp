@@ -23,4 +23,5 @@ A simple todo list app built with Jetpack Compose, demonstrating modern Android 
 - **MVVM** pattern with ViewModel + Repository
 - **Koin** for dependency injection (annotated modules)
 - **Room** for local data persistence with DAO abstraction
-- **Kotlin Coroutines** for async operations# yolo
+- **Kotlin Coroutines** for async operations
+- **Pair Extraordinaire** — collaborative development workflow 🏆
