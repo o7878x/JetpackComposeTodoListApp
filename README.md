@@ -26,3 +26,5 @@ A simple todo list app built with Jetpack Compose, demonstrating modern Android 
 - **Kotlin Coroutines** for async operations
 
 > Developed with collaboration
+
+_Last updated: 2026-07-08_
