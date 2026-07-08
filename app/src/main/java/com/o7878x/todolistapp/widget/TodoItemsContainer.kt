@@ -1,7 +1,6 @@
 package com.o7878x.todolistapp.widget
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,8 +14,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.o7878x.todolistapp.model.TodoItem
+import com.o7878x.todolistapp.model.TodoItemEvent
+import com.o7878x.todolistapp.model.TodoStatus
 import com.o7878x.todolistapp.ui.theme.MediumDp
-import com.o7878x.todolistapp.ui.theme.OverlappingHeight
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
@@ -24,8 +24,7 @@ import kotlinx.coroutines.flow.flowOf
 fun TodoItemsContainer(
     modifier: Modifier = Modifier,
     todoItemsFlow: Flow<List<TodoItem>> = flowOf(listOf()),
-    onItemClick: (TodoItem) -> Unit = {},
-    onItemDelete: (TodoItem) -> Unit = {},
+    onItemEvent: (TodoItemEvent) -> Unit = {},
     overlappingElementsHeight: Dp = 0.dp,
 ) {
     val todos = todoItemsFlow.collectAsState(initial = listOf()).value
@@ -34,11 +33,10 @@ fun TodoItemsContainer(
         contentPadding = PaddingValues(MediumDp),
         verticalArrangement = Arrangement.spacedBy(MediumDp)
     ) {
-        items(todos, key = { it.id }) { item ->
+        items(todos, key = { it.uuid }) { item ->
             TodoItemCard(
                 todoItem = item,
-                onItemClick = onItemClick,
-                onItemDelete = onItemDelete,
+                onItemEvent = onItemEvent,
             )
         }
 
@@ -57,10 +55,10 @@ fun TodoItemsContainerPreview() {
     TodoItemsContainer(
         todoItemsFlow = flowOf(
             listOf(
-                TodoItem(title = "Todo Item 1", isDone = true),
+                TodoItem(title = "Todo Item 1", status = TodoStatus.COMPLETED),
                 TodoItem(title = "Todo Item 2"),
                 TodoItem(title = "Todo Item 3"),
-                TodoItem(title = "Todo Item 4", isDone = true)
+                TodoItem(title = "Todo Item 4", status = TodoStatus.COMPLETED),
             )
         )
     )
