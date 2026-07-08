@@ -7,10 +7,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
@@ -65,13 +74,19 @@ fun AppContent(
     ) {
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusManager = LocalFocusManager.current
+        var deletedUUID by remember {
+            mutableStateOf<String?>(null)
+        }
         TodoItemsContainer(
             todoItemsFlow = mainViewModel.todoListState, onItemEvent = { event ->
                 when (event) {
                     is TodoItemEvent.Click -> { /* navigate to detail, etc. */
                     }
 
-                    is TodoItemEvent.Delete -> mainViewModel.deleteItem(event.item)
+                    is TodoItemEvent.Delete -> {
+                        deletedUUID = event.item.uuid
+                    }
+
                     is TodoItemEvent.Complete -> mainViewModel.updateItem(
                         event.item.copy(status = TodoStatus.COMPLETED)
                     )
@@ -90,5 +105,33 @@ fun AppContent(
                 keyboardController?.hide()
                 focusManager.clearFocus()
             })
+
+        if (deletedUUID != null) {
+            DeleteConfirmationDialog(uuid = deletedUUID!!, onConfirm = {
+                mainViewModel.deleteItem(deletedUUID)
+                deletedUUID = null
+            }, onDismiss = {
+                deletedUUID = null
+            })
+        }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeleteConfirmationDialog(uuid: String, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Delete item") },
+        text = { Text("Are you sure?") },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text("Yes", color = Color.Red)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("No")
+            }
+        })
 }
