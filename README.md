@@ -1,9 +1,3 @@
-# JetpackComposeTodoListApp
-Implement a todo-list app with jetpack compose
+# Jetpack Compose Todo List App
 
-## Dependencies
-
-- Jetpack Compose
-- Coroutine
-- Koin
-- ROOM
+A simple todo list app built with Jetpack Compose.
