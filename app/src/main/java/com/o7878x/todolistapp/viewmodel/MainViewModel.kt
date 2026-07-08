@@ -57,9 +57,12 @@ class MainViewModel(databaseApi: DatabaseApi) : ViewModel() {
         }
     }
 
-    fun deleteItem(item: TodoItem) {
+    fun deleteItem(uuid: String?) {
+        if (uuid == null) {
+            return
+        }
         viewModelScope.launch {
-            todoRepo.delete(item.uuid)
+            todoRepo.delete(uuid)
         }
     }
 
