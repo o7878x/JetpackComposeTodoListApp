@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 interface TodoRepository {
     fun getAllTodos(): Flow<List<TodoEntity>>
 
+    fun getTodoByUUID(uuid: String): Flow<List<TodoEntity>>
+
     suspend fun insert(todoEntity: TodoEntity)
 
     suspend fun delete(uuid: String)
@@ -15,6 +17,10 @@ interface TodoRepository {
 class TodoRepositoryImpl(private val dao: TodoDao) : TodoRepository {
     override fun getAllTodos(): Flow<List<TodoEntity>> {
         return this.dao.getAllTodos()
+    }
+
+    override fun getTodoByUUID(uuid: String): Flow<List<TodoEntity>> {
+        return this.dao.getTodoByUUID(uuid)
     }
 
     override suspend fun insert(todoEntity: TodoEntity) {

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.koin.compiler)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -70,4 +71,8 @@ dependencies {
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)
     implementation(libs.koin.annotations)
+
+    implementation(libs.kotlinx.serlization.json)
+
+    implementation(libs.androidx.navigation.compose)
 }

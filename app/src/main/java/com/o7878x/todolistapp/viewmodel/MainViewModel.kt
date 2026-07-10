@@ -6,6 +6,7 @@ import com.o7878x.todolistapp.db.DatabaseApi
 import com.o7878x.todolistapp.db.todo.toEntity
 import com.o7878x.todolistapp.model.TodoItem
 import com.o7878x.todolistapp.model.TodoStatus
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -70,5 +71,9 @@ class MainViewModel(databaseApi: DatabaseApi) : ViewModel() {
         viewModelScope.launch {
             todoRepo.update(item.toEntity())
         }
+    }
+
+    fun getItemByUUID(uuid: String): Flow<TodoItem?> {
+        return todoRepo.getTodoByUUID(uuid).map { it.getOrNull(0)?.toItem() }
     }
 }
