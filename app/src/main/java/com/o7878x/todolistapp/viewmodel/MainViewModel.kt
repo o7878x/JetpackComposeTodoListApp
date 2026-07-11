@@ -74,6 +74,6 @@ class MainViewModel(databaseApi: DatabaseApi) : ViewModel() {
     }
 
     fun getItemByUUID(uuid: String): Flow<TodoItem?> {
-        return todoRepo.getTodoByUUID(uuid).map { it.getOrNull(0)?.toItem() }
+        return todoRepo.getTodoByUUID(uuid).map { it?.toItem() }
     }
 }

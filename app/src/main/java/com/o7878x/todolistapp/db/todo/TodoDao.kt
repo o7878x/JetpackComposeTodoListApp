@@ -13,7 +13,7 @@ interface TodoDao {
     fun getAllTodos(): Flow<List<TodoEntity>>
 
     @Query("SELECT * FROM todos WHERE uuid = :uuid LIMIT 1")
-    fun getTodoByUUID(uuid: String): Flow<List<TodoEntity>>
+    fun getTodoByUUID(uuid: String): Flow<TodoEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(todo: TodoEntity)
