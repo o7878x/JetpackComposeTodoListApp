@@ -50,12 +50,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.o7878x.todolistapp.R
 import com.o7878x.todolistapp.model.TodoGroup
-import com.o7878x.todolistapp.model.TodoItem
 import com.o7878x.todolistapp.model.TodoPriority
 import com.o7878x.todolistapp.model.TodoStatus
 import com.o7878x.todolistapp.ui.theme.LargeDp
@@ -97,19 +98,22 @@ fun DetailScreen(
     if (showDiscardDialog) {
         AlertDialog(
             onDismissRequest = { showDiscardDialog = false },
-            title = { Text("Discard changes?") },
-            text = { Text("You have unsaved changes. Are you sure you want to discard them?") },
+            title = { Text(stringResource(R.string.detail_dialog_discard_title)) },
+            text = { Text(stringResource(R.string.detail_dialog_discard_body)) },
             confirmButton = {
                 TextButton(onClick = {
                     showDiscardDialog = false
                     isEditing = false
                 }) {
-                    Text("Discard", color = Color.Red)
+                    Text(
+                        text = stringResource(R.string.detail_dialog_discard_confirm),
+                        color = Color.Red
+                    )
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDiscardDialog = false }) {
-                    Text("Keep editing")
+                    Text(stringResource(R.string.detail_dialog_discard_dismiss))
                 }
             }
         )
@@ -141,7 +145,7 @@ fun DetailScreen(
                         OutlinedTextField(
                             value = editedTitle,
                             onValueChange = { editedTitle = it },
-                            label = { Text("Title") },
+                            label = { Text(stringResource(R.string.detail_label_title)) },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
                             colors = OutlinedTextFieldDefaults.colors(
@@ -171,8 +175,8 @@ fun DetailScreen(
                         )
                     } else {
                         DetailInfoCard(
-                            label = "Status",
-                            value = formatStatus(item),
+                            label = stringResource(R.string.detail_label_status),
+                            value = formatStatus(item.status),
                             valueColor = TodoItemIconColor,
                             decoration = if (item.status == TodoStatus.COMPLETED) TextDecoration.LineThrough else null
                         )
@@ -183,7 +187,7 @@ fun DetailScreen(
                 item {
                     if (isEditing) {
                         EnumDropdownField(
-                            label = "Priority",
+                            label = stringResource(R.string.detail_label_priority),
                             selected = editedPriority,
                             options = TodoPriority.entries,
                             onOptionSelected = { editedPriority = it },
@@ -191,7 +195,7 @@ fun DetailScreen(
                         )
                     } else {
                         DetailInfoCard(
-                            label = "Priority",
+                            label = stringResource(R.string.detail_label_priority),
                             value = item.priority.name,
                             valueColor = TodoItemIconColor,
                         )
@@ -202,7 +206,7 @@ fun DetailScreen(
                 item {
                     if (isEditing) {
                         EnumDropdownField(
-                            label = "Group",
+                            label = stringResource(R.string.detail_label_group),
                             selected = editedGroup,
                             options = TodoGroup.entries,
                             onOptionSelected = { editedGroup = it },
@@ -210,7 +214,7 @@ fun DetailScreen(
                         )
                     } else {
                         DetailInfoCard(
-                            label = "Group",
+                            label = stringResource(R.string.detail_label_group),
                             value = item.group.name,
                             valueColor = TodoItemIconColor,
                         )
@@ -226,7 +230,7 @@ fun DetailScreen(
                         )
                     } else {
                         DetailInfoCard(
-                            label = "Deadline",
+                            label = stringResource(R.string.detail_label_deadline),
                             value = formatDeadline(item.deadlineTimestamp),
                             valueColor = TodoItemIconColor,
                         )
@@ -247,7 +251,7 @@ fun DetailScreen(
                                 .padding(MediumDp)
                         ) {
                             Text(
-                                text = "ID",
+                                text = stringResource(R.string.detail_label_id),
                                 fontSize = 12.sp,
                                 color = TodoItemTextColor.copy(alpha = 0.6f)
                             )
@@ -296,7 +300,8 @@ fun DetailScreen(
             ) {
                 Icon(
                     imageVector = if (isEditing) Icons.Default.Done else Icons.Default.Create,
-                    contentDescription = if (isEditing) "Save" else "Edit",
+                    contentDescription = if (isEditing) stringResource(R.string.detail_fab_save)
+                        else stringResource(R.string.detail_fab_edit),
                     tint = TodoItemIconColor
                 )
             }
@@ -323,7 +328,7 @@ private fun StatusDropdownField(
             value = formatStatus(selected),
             onValueChange = {},
             readOnly = true,
-            label = { Text("Status") },
+            label = { Text(stringResource(R.string.detail_label_status)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -352,8 +357,6 @@ private fun StatusDropdownField(
         }
     }
 }
-
-// ── Generic dropdown for enum fields ──
 
 // ── Generic dropdown for enum fields ──
 
@@ -429,14 +432,14 @@ private fun DeadlineEditor(
                     }
                     showPicker = false
                 }) {
-                    Text("OK")
+                    Text(stringResource(R.string.detail_date_picker_ok))
                 }
             },
             dismissButton = {
                 TextButton(onClick = {
                     showPicker = false
                 }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.detail_date_picker_cancel))
                 }
             }
         ) {
@@ -459,7 +462,7 @@ private fun DeadlineEditor(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Deadline",
+                text = stringResource(R.string.detail_label_deadline),
                 fontWeight = FontWeight.Medium,
                 fontSize = 14.sp,
                 color = TodoItemIconColor.copy(alpha = 0.7f),
@@ -541,18 +544,15 @@ private fun formatDeadline(timestamp: Long): String {
         .format(Date(timestamp))
 }
 
-private fun formatStatus(item: TodoItem): String {
-    return formatStatus(item.status)
-}
-
+@Composable
 private fun formatStatus(status: TodoStatus): String {
     return when (status) {
-        TodoStatus.NONE -> "None"
-        TodoStatus.NOT_STARTED -> "Not Started"
-        TodoStatus.IN_PROGRESS -> "In Progress"
-        TodoStatus.COMPLETED -> "Completed"
-        TodoStatus.SUSPENDED -> "Suspended"
-        TodoStatus.CANCELLED -> "Cancelled"
-        TodoStatus.ISSUE -> "Issue"
+        TodoStatus.NONE -> stringResource(R.string.status_none)
+        TodoStatus.NOT_STARTED -> stringResource(R.string.status_not_started)
+        TodoStatus.IN_PROGRESS -> stringResource(R.string.status_in_progress)
+        TodoStatus.COMPLETED -> stringResource(R.string.status_completed)
+        TodoStatus.SUSPENDED -> stringResource(R.string.status_suspended)
+        TodoStatus.CANCELLED -> stringResource(R.string.status_cancelled)
+        TodoStatus.ISSUE -> stringResource(R.string.status_issue)
     }
 }

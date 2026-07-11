@@ -16,6 +16,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.o7878x.todolistapp.R
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
@@ -90,16 +92,19 @@ fun HomeScreen(
 fun DeleteConfirmationDialog(uuid: String, onConfirm: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Delete item") },
-        text = { Text("Are you sure?") },
+        title = { Text(stringResource(R.string.home_delete_dialog_title)) },
+        text = { Text(stringResource(R.string.home_delete_dialog_body)) },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text("Yes", color = Color.Red)
+                Text(
+                    text = stringResource(R.string.home_delete_dialog_confirm),
+                    color = Color.Red
+                )
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("No")
+                Text(stringResource(R.string.home_delete_dialog_dismiss))
             }
         })
 }
